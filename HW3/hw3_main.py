@@ -1,6 +1,6 @@
 from worker import worker
 from CEO import CEO
-from UI import OrganizationApp
+from OrganizationApp import OrganizationApp
 
 
 OrganizationApp().run()
