@@ -15,11 +15,3 @@ class k_worker_type(enum.Enum):
     CTO = 10
     CEO  = 11
 
-    @classmethod
-    def print_worker_type_list(cls):
-        for t in cls:
-            print(f'{t.value} : {t.name}')
-
-if __name__ == '__main__':
-
-    worker_type.print_worker_type_list()

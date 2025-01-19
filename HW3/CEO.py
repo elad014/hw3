@@ -11,7 +11,6 @@ class MetaCEO(type):
 class CEO(employee,metaclass=MetaCEO):
 
     def __init__(self, name: str, department: str, age: int):
-        self.test = 3
         self.type = "CEO"
         super().__init__(name = name, department = department, age = age)
 

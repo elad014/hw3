@@ -38,21 +38,24 @@ class employee:
         return self._id
 
     def add_employee(self,new_employee):
+        print(f"{new_employee.name} added {new_employee._id}")
         self.employees.append(new_employee)
 
-    def serch_manager(self,id):
-        if id == self.get_id():
+    def get_worker_by_id(self, id):
+        if id == self._id:
             return self
         for emp in self.employees:
-            res = emp.serch_manager(id)
-            return res
+            res = emp.get_worker_by_id(id)
+            if res is not None:
+                return res
+        return None
 
-    def print_manager(self,space):
+    def print_manager(self,space = 3):
         if not self.employees:
-            print(("-"* space) + f"employee: {self.name}")
+            print(("-"* space) + f"employee: {self.name} {self._id}")
             return
         else:
-            print(("-"* space) + f"manager: {self.name}")
+            print(("-"* space) + f"manager: {self.name} {self._id}")
             for emp in self.employees:
                 emp.print_manager(space + 2)
         return
