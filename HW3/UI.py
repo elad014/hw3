@@ -1,10 +1,5 @@
 from engeine import engeine
-from dataclasses import dataclass
-from worker_type import k_worker_type
-
-
-# format add_employee <name: str> <department: str> <age: int> <type: str> <manager_id: id>
-
+from Util import saved_commands,k_worker_type,defs
 
 class OrganizationApp:
 
@@ -28,68 +23,67 @@ class OrganizationApp:
             #arg = input("Please enter a command: ")
             arg = x
             arg = arg.split()
-            tmp = {}
+            self.parser(arg)
 
-            if len(arg) == 0 or len(arg) > 6:
-                print("bad command")
-                continue
-            tmp['command'] =    arg[0]
-            tmp['name'] =       arg[1]
-            tmp['department'] = arg[2]
-            tmp['age'] =        int(arg[3])
-            tmp['type'] =       arg[4]
-            if len(arg) == 6 :
-                tmp['manager_id'] = int(arg[5])
 
-             #validate command
-            if tmp['command'] == 'add_employee':
-                #VALIDATE EMPLOYEE
-                if tmp['type'] == "CEO" and len(arg) > 5 and tmp['manager_id']:
-                    print("ceo canot get manager_id")
-                    continue
-                if tmp['type'] in k_worker_type.__members__ and tmp['type'] != "CEO" and len(arg) <= 5:
-                    print("you must set manager_id to employee")
-                    continue
-                else:
-                    self.E.add_employee(tmp)
-
-        self.print_tree()
+        self.E.print_tree()
         print("Thank you for using FUN in the GROCERY STORE!")
 
 
+    def parser(self,args):
+        if not self.valedate_comand_exist(args[0]):
+            return False
+        if args[0] == saved_commands.add_employee.name:
+            return self.add_employee_parser(args)
+        if args[0] == saved_commands.delete_employee.name:
+            return self.id_parser(args)
+        if args[0] == saved_commands.print_employee.name:
+            return self.id_parser(args)
+        if args[0] == saved_commands.assign_manage.name:
+            return self.two_id_parser(args)
+        else:
+            tmp = {defs.command.name: args[0]}
 
-    def parser(self, args):
-        # format add_employee <name: str> <department: str> <age: int> <type: str> <manager_id: id>
-        args = args.slplit()
-        # validate format
-        if not args[0].isalpha():
-            return print(f"name must be string")
-        if not args[1].isalpha():
-            print(f"department must be string")
-            return False
-        elif not args[2].isdigit():
-            print(f"age must be int")
-            return False
-        elif args[3] not in k_worker_type:
-            print(f"age {args[3]} is not in the list of allowed workers type")
-            return False
-        elif args[4] and not args[4].isdigit():
-            print(f"manager_id must be int")
-            return False
-        elif args[3] == k_worker_type.CEO and args[4] and args[4].isdigit():
-            print(f"CEO canot get manager_id")
-            return False
-        elif args[3] == k_worker_type.CEO and self.Organization_tree[0]:
-            print(f"Organization can have only a single CEO")
-            return False
-        # validate type if
-        return args
+    def add_employee_parser(self,args):
 
-    def search_manager_by_id(self):
-        for root in self.E.Organization_tree:
-            root.print_manager(3)
+        worker_data = {}
 
+        worker_data[defs.command.name]    = args[0]
+        worker_data[defs.name.name]       = args[1]
+        worker_data[defs.department.name] = args[2]
+        worker_data[defs.type.name]       = args[4]
 
-    def print_tree(self):
-        for root in self.E.Organization_tree:
-            root.print_manager(3)
+        if args[3].isdigit():
+            worker_data[defs.age.name] = int(args[3])
+        else:
+            print('[ERROR] age id must be a number')
+            return False
+
+        if len(args) == 6:
+            if args[5].isdigit():
+                worker_data[defs.manager_id.name] = int(args[5])
+            else:
+                print('[ERROR] manager id must be a number')
+                return False
+        if self.validate_add_employee_data(worker_data):
+            self.E.add_employee(worker_data)
+
+        return
+
+    def validate_add_employee_data(self, worker_data):
+
+        if worker_data[defs.type.name] not in k_worker_type.__members__:
+            print('[ERROR] worker type must be from workerd type list')
+            return False
+
+        if worker_data[defs.type.name]  == k_worker_type.CEO.name and defs.manager_id.name in worker_data:
+            print('[ERROR] CEO canot get manager_id')
+            return False
+
+        return True
+
+    def valedate_comand_exist(self,comand):
+            if comand not in saved_commands.__members__:
+                print(f"{self.comand} is not in the command list")
+                return False
+            return True
