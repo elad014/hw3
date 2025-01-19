@@ -15,6 +15,3 @@ class CEO(employee,metaclass=MetaCEO):
         self.type = "CEO"
         super().__init__(name = name, department = department, age = age)
 
-
-
-
