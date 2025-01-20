@@ -1,5 +1,5 @@
 from engeine import engeine
-from Util import saved_commands,k_worker_type,defs
+from Util import saved_commands,k_worker_type,defs,Util
 
 class OrganizationApp:
 
@@ -7,8 +7,12 @@ class OrganizationApp:
         self.E = engeine()
 
     def run(self):
+        arg = 'welcome'
+        arg = arg.split()
+        self.parser(arg)
 
-        c = ['add_employee ITZIK_manc nagarot 10 CEO 1',
+
+        a = ['add_employee ITZIK_manc nagarot 10 CEO 1',
             'add_employee ITZIK_manc nagarot 10 CEO',
             'add_employee ITZIK_manc2 nagarot 10 CEO',
             'add_employee ITZIK_FAIL nagarot 10 CTO 5',
@@ -19,27 +23,59 @@ class OrganizationApp:
             'add_employee ITZIK6 nagarot 10 CTO 3',
             'add_employee ITZIK7 nagarot 10 CTO 2',]
 
-        for x in c:
+        for x in a:
+            #arg = input("Please enter a command: ")
+            arg = x
+            arg = arg.split()
+            self.parser(arg)
+        self.E.print_tree()
+
+        print("///////////////////////////////////////////\n")
+        d =['delete_employee 101',
+            'delete_employee 3',
+            'delete_employee 7',
+            'delete_employee 5',]
+        for x in d:
+            #arg = input("Please enter a command: ")
+            arg = x
+            arg = arg.split()
+            self.parser(arg)
+        self.E.print_tree()
+
+
+        print("///////////////////////////////////////////\n")
+        d =['print_employee 101',
+            'print_employee 1',
+            'print_employee 2',
+            'print_employee 6',]
+        for x in d:
             #arg = input("Please enter a command: ")
             arg = x
             arg = arg.split()
             self.parser(arg)
 
-
-        self.E.print_tree()
         print("Thank you for using FUN in the GROCERY STORE!")
 
 
     def parser(self,args):
         if not self.valedate_comand_exist(args[0]):
             return False
-        if args[0] == saved_commands.add_employee.name:
+        elif args[0] == saved_commands.welcome.name:
+            return Util.print_authors()
+
+        elif args[0] == saved_commands.print_org.name:
+            self.E.print_tree()
+
+        elif args[0] == saved_commands.add_employee.name:
             return self.add_employee_parser(args)
-        if args[0] == saved_commands.delete_employee.name:
-            return self.id_parser(args)
-        if args[0] == saved_commands.print_employee.name:
-            return self.id_parser(args)
-        if args[0] == saved_commands.assign_manage.name:
+
+        elif args[0] == saved_commands.delete_employee.name:
+            return self.delete_employee_parser(args)
+
+        elif args[0] == saved_commands.print_employee.name:
+            return self.print_employee_parser(args)
+
+        elif args[0] == saved_commands.assign_manage.name:
             return self.two_id_parser(args)
         else:
             tmp = {defs.command.name: args[0]}
@@ -65,10 +101,28 @@ class OrganizationApp:
             else:
                 print('[ERROR] manager id must be a number')
                 return False
+
         if self.validate_add_employee_data(worker_data):
             self.E.add_employee(worker_data)
 
         return
+
+    def delete_employee_parser(self,args):
+
+        if args[1].isdigit():
+           self.E.delete_worker(int(args[1]))
+           return
+        print('[ERROR] id must be a number')
+        return False
+
+    def print_employee_parser(self,args):
+
+        if args[1].isdigit():
+           self.E.print_worker(int(args[1]))
+           return
+        print('[ERROR] id must be a number')
+        return False
+
 
     def validate_add_employee_data(self, worker_data):
 

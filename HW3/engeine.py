@@ -29,7 +29,7 @@ class engeine:
 
     def add_worker(self,worker_data):
 
-        manager = self.find_manager(worker_data[defs.manager_id.name])
+        manager = self.find_worker(worker_data[defs.manager_id.name])
         if manager:
             _worker = worker(name=worker_data[defs.name.name],
                       department=worker_data[defs.department.name],
@@ -41,10 +41,29 @@ class engeine:
         else:
             print(f"{worker_data[defs.manager_id.name]} not found")
 
-    def find_manager(self,id):
+    def find_worker(self,id):
         for root in self.Organization_tree:
             manager = root.get_worker_by_id(id)
         return manager
+
+    def delete_worker(self,id):
+        worker = self.find_worker(id)
+        if not worker:
+            print("worker id not found")
+            return
+        if worker.employees:
+            print("this worker is manager cant remove it")
+            return
+        worker_manager = self.find_worker(worker.manager_id)
+        worker_manager.employees.remove(worker)
+        print(f"worker {worker.name} removed sucssessfult")
+
+    def print_worker(self,id):
+        worker = self.find_worker(id)
+        if not worker:
+            print("worker id not found")
+            return
+        print(worker.get_detail())
 
     def print_tree(self):
             for root in self.Organization_tree:

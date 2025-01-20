@@ -32,7 +32,7 @@ class employee:
                 f"id = {self.get_id()}\n"
                 f"department = {self.department}\n"
                 f"age = {self.age}\n"
-                f"type = {self.type}")
+                f"type = {self.type}\n")
 
     def get_id(self):
         return self._id
@@ -48,7 +48,7 @@ class employee:
             res = emp.get_worker_by_id(id)
             if res is not None:
                 return res
-        return None
+        return
 
     def print_manager(self,space = 3):
         if not self.employees:

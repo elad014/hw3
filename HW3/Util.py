@@ -12,7 +12,7 @@ class Util:
         print("/// id:   207930868               ////")
         print("/// name: Ofir Goldstein          ////")
         print("/// mail: goldsteinofir@gmail.com ////")
-        print("//////////////////////////////////////")
+        print("//////////////////////////////////////\n")
 
 class k_worker_type(enum.Enum):
 
