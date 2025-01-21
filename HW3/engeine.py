@@ -48,12 +48,12 @@ class engeine:
                 print(f'worker {id} not founde')
         return worker
 
-    def delete_worker(self,id):
+    def delete_worker(self,id,force = 0):
         worker = self.find_worker(id)
         if not worker:
             return
 
-        if worker.employees:
+        if worker.employees and force == 0:
             print("this worker is manager cant remove it")
             return
 
@@ -75,9 +75,12 @@ class engeine:
             print("this worker alredy belong to the manger")
             return
 
-        self.delete_worker(worker_id)
-        worker.manager_id = manager_id
         new_manager = self.find_worker(manager_id)
+        if not new_manager:
+            return
+
+        self.delete_worker(worker_id,force = 1)
+        worker.manager_id = manager_id
         worker.department = new_manager.department
         new_manager.add_employee(worker)
         print(f'worker {worker_id} assined sucssessfully to manager {manager_id}')

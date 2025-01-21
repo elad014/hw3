@@ -11,6 +11,9 @@ class OrganizationApp:
         arg = arg.split()
         self.parser(arg)
 
+        print('+++++++Testing:\n\n\n\n')
+
+        print('add_add_employee:')
 
         a = ['add_employee ITZIK_manc nagarot_manc 10 CEO 1',
             'add_employee ITZIK_manc nagarot 10 CEO',
@@ -25,16 +28,42 @@ class OrganizationApp:
 
         for x in a:
             #arg = input("Please enter a command: ")
+            print(x)
             arg = x
             arg = arg.split()
             self.parser(arg)
+
+        print('tree:\n')
         self.E.print_tree()
 
-        print("///////////////////////////////////////////\n")
+        print("\n///////////////////////////////////////////\n")
+        print('print_dep:\n')
         arg = 'print_dep'
         arg = arg.split()
         self.parser(arg)
-        print("///////////////////////////////////////////\n")
+
+        print("\n///////////////////////////////////////////\n")
+
+        print("assign_manager:\n")
+
+        d = ['assign_manager 101 102',
+             'assign_manager 2 101',
+             'assign_manager 101 2',
+             'assign_manager 6 2',
+             'assign_manager 5 1',]
+        for x in d:
+            # arg = input("Please enter a command: ")
+            print(x)
+            arg = x
+            arg = arg.split()
+            self.parser(arg)
+
+        print('tree:\n')
+        self.E.print_tree()
+
+        print("\n///////////////////////////////////////////\n")
+
+        print('delete_employee:\n')
 
         d =['delete_employee 101',
             'delete_employee 3',
@@ -42,19 +71,25 @@ class OrganizationApp:
             'delete_employee 5',]
         for x in d:
             #arg = input("Please enter a command: ")
+            print(x)
             arg = x
             arg = arg.split()
             self.parser(arg)
+
+        print('tree:\n')
         self.E.print_tree()
 
 
-        print("///////////////////////////////////////////\n")
+        print("\n///////////////////////////////////////////\n")
+
+        print('print_employee:\n')
         d =['print_employee 101',
             'print_employee 1',
             'print_employee 2',
             'print_employee 6',]
         for x in d:
             #arg = input("Please enter a command: ")
+            print(x)
             arg = x
             arg = arg.split()
             self.parser(arg)
@@ -85,7 +120,7 @@ class OrganizationApp:
             return self.print_employee_parser(args)
 
         elif args[0] == saved_commands.assign_manager.name:
-            return self.assign_manager_parser(args)
+            return self.asign_manager_parser(args)
         else:
             tmp = {defs.command.name: args[0]}
 
@@ -134,9 +169,9 @@ class OrganizationApp:
         return False
 
     def asign_manager_parser(self,args):
-
+        print
         if args[1].isdigit():
-           self.E.delete_worker(int(args[1]))
+           self.E.asign_manager(int(args[1]), int(args[2]))
            return
         print('[ERROR] id must be a number')
         return False
