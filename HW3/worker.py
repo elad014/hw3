@@ -13,9 +13,4 @@ class worker(employee):
         return (f'{super().get_detail()}\n'
                 f'manager_id = {self.manager_id}')
 
-    def print_employee(self):
-        pass
-
-    def assign_manager(self,manager_id: int):
-        pass
 

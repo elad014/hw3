@@ -8,7 +8,7 @@ class engeine:
     def __init__(self):
         self.is_a_CEO = False
         self.Organization_tree= []
-
+        self.num_of_employees = 0
 
     def add_employee(self,worker_data):
 
@@ -27,7 +27,7 @@ class engeine:
                 department=worker_data[defs.department.name],
                 age=worker_data[defs.age.name]))
 
-    def add_worker(self,worker_data):
+    def add_worker(self,worker_data,):
 
         manager = self.find_worker(worker_data[defs.manager_id.name])
         if manager:
@@ -43,27 +43,44 @@ class engeine:
 
     def find_worker(self,id):
         for root in self.Organization_tree:
-            manager = root.get_worker_by_id(id)
-        return manager
+            worker = root.get_worker_by_id(id)
+            if not worker:
+                print(f'worker {id} not founde')
+        return worker
 
     def delete_worker(self,id):
         worker = self.find_worker(id)
         if not worker:
-            print("worker id not found")
             return
+
         if worker.employees:
             print("this worker is manager cant remove it")
             return
+
         worker_manager = self.find_worker(worker.manager_id)
         worker_manager.employees.remove(worker)
         print(f"worker {worker.name} removed sucssessfult")
 
     def print_worker(self,id):
         worker = self.find_worker(id)
+        if worker:
+            print(worker.get_detail())
+
+    def asign_manager(self, worker_id, manager_id):
+        worker = self.find_worker(worker_id)
         if not worker:
-            print("worker id not found")
             return
-        print(worker.get_detail())
+
+        if worker.manager_id == manager_id:
+            print("this worker alredy belong to the manger")
+            return
+
+        self.delete_worker(worker_id)
+        worker.manager_id = manager_id
+        new_manager = self.find_worker(manager_id)
+        worker.department = new_manager.department
+        new_manager.add_employee(worker)
+        print(f'worker {worker_id} assined sucssessfully to manager {manager_id}')
 
     def print_tree(self):
             for root in self.Organization_tree:

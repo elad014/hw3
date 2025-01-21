@@ -66,6 +66,9 @@ class OrganizationApp:
         elif args[0] == saved_commands.print_org.name:
             self.E.print_tree()
 
+        elif args[0] == saved_commands.print_org.name:
+            self.E.print_tree()
+
         elif args[0] == saved_commands.add_employee.name:
             return self.add_employee_parser(args)
 
@@ -75,8 +78,8 @@ class OrganizationApp:
         elif args[0] == saved_commands.print_employee.name:
             return self.print_employee_parser(args)
 
-        elif args[0] == saved_commands.assign_manage.name:
-            return self.two_id_parser(args)
+        elif args[0] == saved_commands.assign_manager.name:
+            return self.assign_manager_parser(args)
         else:
             tmp = {defs.command.name: args[0]}
 
@@ -104,6 +107,7 @@ class OrganizationApp:
 
         if self.validate_add_employee_data(worker_data):
             self.E.add_employee(worker_data)
+            self.E.num_of_employees += 1
 
         return
 
@@ -123,6 +127,13 @@ class OrganizationApp:
         print('[ERROR] id must be a number')
         return False
 
+    def asign_manager_parser(self,args):
+
+        if args[1].isdigit():
+           self.E.delete_worker(int(args[1]))
+           return
+        print('[ERROR] id must be a number')
+        return False
 
     def validate_add_employee_data(self, worker_data):
 
@@ -133,6 +144,16 @@ class OrganizationApp:
         if worker_data[defs.type.name]  == k_worker_type.CEO.name and defs.manager_id.name in worker_data:
             print('[ERROR] CEO canot get manager_id')
             return False
+
+        if defs.manager_id.name in worker_data:
+            manager = self.E.find_worker(worker_data[defs.manager_id.name])
+            if not manager:
+                print('cant finde manager')
+                return False
+
+            if not manager.department != worker_data[defs.department.name]:
+                print('you canot set this worker to this manager with other department')
+                return False
 
         return True
 

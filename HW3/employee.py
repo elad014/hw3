@@ -19,6 +19,7 @@ class employee:
         self.department: str = department
         self.age: int = age
         self.employees = []
+        self.num_of_employees = 0
         self._id = None
         self.gen_uniq_id()
 

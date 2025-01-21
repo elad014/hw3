@@ -34,7 +34,7 @@ class saved_commands(enum.Enum):
     add_employee = 2
     delete_employee = 3
     print_employee = 4
-    assign_manage = 5
+    assign_manager = 5
     print_org = 6
 
 class defs(enum.Enum):
