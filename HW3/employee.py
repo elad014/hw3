@@ -60,6 +60,12 @@ class employee:
             for emp in self.employees:
                 emp.print_manager(space + 2)
         return
+
+    def print_dep_manager(self,space = 3):
+        print(f'|--- {self.name}')
+        for emp in self.employees:
+            emp.print_dep_manager(space)
+        return
 """
 @dataclass
 class employee:

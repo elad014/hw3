@@ -12,16 +12,16 @@ class OrganizationApp:
         self.parser(arg)
 
 
-        a = ['add_employee ITZIK_manc nagarot 10 CEO 1',
+        a = ['add_employee ITZIK_manc nagarot_manc 10 CEO 1',
             'add_employee ITZIK_manc nagarot 10 CEO',
             'add_employee ITZIK_manc2 nagarot 10 CEO',
             'add_employee ITZIK_FAIL nagarot 10 CTO 5',
-            'add_employee ITZIK2 nagarot 10 CTO 1',
-            'add_employee ITZIK3 nagarot 10 CTO 1',
-            'add_employee ITZIK4 nagarot 10 CTO 2',
-            'add_employee ITZIK5 nagarot 10 CTO 3',
-            'add_employee ITZIK6 nagarot 10 CTO 3',
-            'add_employee ITZIK7 nagarot 10 CTO 2',]
+            'add_employee ITZIK2 dev 10 CTO 1',
+            'add_employee ITZIK3 client 10 CTO 1',
+            'add_employee ITZIK4 dev 10 CTO 2',
+            'add_employee ITZIK5 client 10 CTO 3',
+            'add_employee ITZIK6 client 10 CTO 3',
+            'add_employee ITZIK7 dev 10 CTO 2',]
 
         for x in a:
             #arg = input("Please enter a command: ")
@@ -31,6 +31,11 @@ class OrganizationApp:
         self.E.print_tree()
 
         print("///////////////////////////////////////////\n")
+        arg = 'print_dep'
+        arg = arg.split()
+        self.parser(arg)
+        print("///////////////////////////////////////////\n")
+
         d =['delete_employee 101',
             'delete_employee 3',
             'delete_employee 7',
@@ -54,6 +59,7 @@ class OrganizationApp:
             arg = arg.split()
             self.parser(arg)
 
+
         print("Thank you for using FUN in the GROCERY STORE!")
 
 
@@ -66,8 +72,8 @@ class OrganizationApp:
         elif args[0] == saved_commands.print_org.name:
             self.E.print_tree()
 
-        elif args[0] == saved_commands.print_org.name:
-            self.E.print_tree()
+        elif args[0] == saved_commands.print_dep.name:
+            self.E.print_dep()
 
         elif args[0] == saved_commands.add_employee.name:
             return self.add_employee_parser(args)
@@ -151,7 +157,7 @@ class OrganizationApp:
                 print('cant finde manager')
                 return False
 
-            if not manager.department != worker_data[defs.department.name]:
+            if manager.department != worker_data[defs.department.name] and worker_data[defs.manager_id.name] != 1:
                 print('you canot set this worker to this manager with other department')
                 return False
 

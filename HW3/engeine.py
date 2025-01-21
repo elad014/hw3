@@ -85,3 +85,9 @@ class engeine:
     def print_tree(self):
             for root in self.Organization_tree:
                 root.print_manager(3)
+
+    def print_dep(self):
+        for root in self.Organization_tree:
+            for w in root.employees:
+                print(f'|- {w.department}')
+                w.print_dep_manager()
