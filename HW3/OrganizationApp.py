@@ -28,7 +28,6 @@ class OrganizationApp:
 
         for x in a:
             #arg = input("Please enter a command: ")
-            print(x)
             arg = x
             arg = arg.split()
             self.parser(arg)
@@ -53,7 +52,7 @@ class OrganizationApp:
              'assign_manager 5 1',]
         for x in d:
             # arg = input("Please enter a command: ")
-            print(x)
+
             arg = x
             arg = arg.split()
             self.parser(arg)
@@ -87,9 +86,9 @@ class OrganizationApp:
             'print_employee 1',
             'print_employee 2',
             'print_employee 6',]
+
         for x in d:
             #arg = input("Please enter a command: ")
-            print(x)
             arg = x
             arg = arg.split()
             self.parser(arg)
@@ -169,7 +168,6 @@ class OrganizationApp:
         return False
 
     def asign_manager_parser(self,args):
-        print
         if args[1].isdigit():
            self.E.asign_manager(int(args[1]), int(args[2]))
            return
