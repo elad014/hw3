@@ -46,25 +46,25 @@ class employee:
         if id == self._id:
             return self
         for emp in self.employees:
-            res = emp.get_worker_by_id(id)
-            if res is not None:
-                return res
+            worker = emp.get_worker_by_id(id)
+            if worker:
+                return worker
         return
 
-    def print_manager(self,space = 3):
+    def print_manager(self,indent = 3):
         if not self.employees:
-            print(("-"* space) + f"employee: {self.name} {self._id}")
+            print(("-"* indent) + f"employee: {self.name} {self._id}")
             return
         else:
-            print(("-"* space) + f"manager: {self.name} {self._id}")
+            print(("-"* indent) + f"manager: {self.name} {self._id}")
             for emp in self.employees:
-                emp.print_manager(space + 2)
+                emp.print_manager(indent + 2)
         return
 
-    def print_dep_manager(self,space = 3):
+    def print_dep_manager(self,indent = 3):
         print(f'|--- {self.name}')
         for emp in self.employees:
-            emp.print_dep_manager(space)
+            emp.print_dep_manager(indent)
         return
 """
 @dataclass

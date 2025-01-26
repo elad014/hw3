@@ -1,10 +1,10 @@
-from engeine import engeine
+from engine import Engine
 from Util import saved_commands,k_worker_type,defs,Util
 
 class OrganizationApp:
 
     def __init__(self):
-        self.E = engeine()
+        self.engeine = Engine()
 
     def run(self):
         arg = 'welcome'
@@ -19,6 +19,7 @@ class OrganizationApp:
             'add_employee ITZIK_manc nagarot 10 CEO',
             'add_employee ITZIK_manc2 nagarot 10 CEO',
             'add_employee ITZIK_FAIL nagarot 10 CTO 5',
+            'add_employee ITZIK2 nagarot_manc 10 CTO',
             'add_employee ITZIK2 dev 10 CTO 1',
             'add_employee ITZIK3 client 10 CTO 1',
             'add_employee ITZIK4 dev 10 CTO 2',
@@ -28,12 +29,13 @@ class OrganizationApp:
 
         for x in a:
             #arg = input("Please enter a command: ")
+            print(x)
             arg = x
             arg = arg.split()
             self.parser(arg)
 
         print('tree:\n')
-        self.E.print_tree()
+        self.engeine.print_tree()
 
         print("\n///////////////////////////////////////////\n")
         print('print_dep:\n')
@@ -52,13 +54,13 @@ class OrganizationApp:
              'assign_manager 5 1',]
         for x in d:
             # arg = input("Please enter a command: ")
-
+            print(x)
             arg = x
             arg = arg.split()
             self.parser(arg)
 
         print('tree:\n')
-        self.E.print_tree()
+        self.engeine.print_tree()
 
         print("\n///////////////////////////////////////////\n")
 
@@ -76,7 +78,7 @@ class OrganizationApp:
             self.parser(arg)
 
         print('tree:\n')
-        self.E.print_tree()
+        self.engeine.print_tree()
 
 
         print("\n///////////////////////////////////////////\n")
@@ -86,9 +88,9 @@ class OrganizationApp:
             'print_employee 1',
             'print_employee 2',
             'print_employee 6',]
-
         for x in d:
             #arg = input("Please enter a command: ")
+            print(x)
             arg = x
             arg = arg.split()
             self.parser(arg)
@@ -98,16 +100,18 @@ class OrganizationApp:
 
 
     def parser(self,args):
-        if not self.valedate_comand_exist(args[0]):
+
+        if not self.validate_command_exist(args[0]):
             return False
+
         elif args[0] == saved_commands.welcome.name:
             return Util.print_authors()
 
         elif args[0] == saved_commands.print_org.name:
-            self.E.print_tree()
+            self.engeine.print_tree()
 
         elif args[0] == saved_commands.print_dep.name:
-            self.E.print_dep()
+            self.engeine.print_dep()
 
         elif args[0] == saved_commands.add_employee.name:
             return self.add_employee_parser(args)
@@ -119,11 +123,14 @@ class OrganizationApp:
             return self.print_employee_parser(args)
 
         elif args[0] == saved_commands.assign_manager.name:
-            return self.asign_manager_parser(args)
+            return self.assign_manager_parser(args)
         else:
             tmp = {defs.command.name: args[0]}
 
     def add_employee_parser(self,args):
+        if len(args) < 5:
+            print("not enough argumants")
+            return
 
         worker_data = {}
 
@@ -139,22 +146,26 @@ class OrganizationApp:
             return False
 
         if len(args) == 6:
+            print(args[5])
             if args[5].isdigit():
                 worker_data[defs.manager_id.name] = int(args[5])
             else:
                 print('[ERROR] manager id must be a number')
                 return False
+        if len(args) == 5 and worker_data[defs.type.name] !=  k_worker_type.CEO.name:
+            print("Error the only worker that can be without maneger is CEO")
+            return False
 
         if self.validate_add_employee_data(worker_data):
-            self.E.add_employee(worker_data)
-            self.E.num_of_employees += 1
+            self.engeine.add_employee(worker_data)
+            self.engeine.num_of_employees += 1
 
         return
 
     def delete_employee_parser(self,args):
 
         if args[1].isdigit():
-           self.E.delete_worker(int(args[1]))
+           self.engeine.delete_worker(int(args[1]))
            return
         print('[ERROR] id must be a number')
         return False
@@ -162,14 +173,15 @@ class OrganizationApp:
     def print_employee_parser(self,args):
 
         if args[1].isdigit():
-           self.E.print_worker(int(args[1]))
+           self.engeine.print_worker(int(args[1]))
            return
         print('[ERROR] id must be a number')
         return False
 
-    def asign_manager_parser(self,args):
+    def assign_manager_parser(self, args):
+        print
         if args[1].isdigit():
-           self.E.asign_manager(int(args[1]), int(args[2]))
+           self.engeine.asign_manager(int(args[1]), int(args[2]))
            return
         print('[ERROR] id must be a number')
         return False
@@ -177,26 +189,26 @@ class OrganizationApp:
     def validate_add_employee_data(self, worker_data):
 
         if worker_data[defs.type.name] not in k_worker_type.__members__:
-            print('[ERROR] worker type must be from workerd type list')
+            print('[ERROR] worker type must be from worker type list')
             return False
 
         if worker_data[defs.type.name]  == k_worker_type.CEO.name and defs.manager_id.name in worker_data:
-            print('[ERROR] CEO canot get manager_id')
+            print('[ERROR] CEO can not get manager_id')
             return False
 
         if defs.manager_id.name in worker_data:
-            manager = self.E.find_worker(worker_data[defs.manager_id.name])
+            manager = self.engeine.find_worker(worker_data[defs.manager_id.name])
             if not manager:
-                print('cant finde manager')
+                print('cant find manager')
                 return False
 
             if manager.department != worker_data[defs.department.name] and worker_data[defs.manager_id.name] != 1:
-                print('you canot set this worker to this manager with other department')
+                print('You can not set this worker to this manager with other department')
                 return False
 
         return True
 
-    def valedate_comand_exist(self,comand):
+    def validate_command_exist(self, comand):
             if comand not in saved_commands.__members__:
                 print(f"{self.comand} is not in the command list")
                 return False

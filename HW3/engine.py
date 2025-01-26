@@ -3,7 +3,7 @@ from CEO import CEO
 from Util import saved_commands,k_worker_type,defs
 
 
-class engeine:
+class Engine:
 
     def __init__(self):
         self.is_a_CEO = False
@@ -17,7 +17,7 @@ class engeine:
         elif not self.is_a_CEO:
             self.add_CEO(worker_data)
         else:
-            print("there is alredy manc")
+            print("there is already CEO")
             return
 
     def add_CEO(self,worker_data):
@@ -42,6 +42,7 @@ class engeine:
             print(f"{worker_data[defs.manager_id.name]} not found")
 
     def find_worker(self,id):
+        worker = None
         for root in self.Organization_tree:
             worker = root.get_worker_by_id(id)
             if not worker:
@@ -70,6 +71,7 @@ class engeine:
         worker = self.find_worker(worker_id)
         if not worker:
             return
+
 
         if worker.manager_id == manager_id:
             print("this worker alredy belong to the manger")

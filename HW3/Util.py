@@ -38,7 +38,7 @@ class saved_commands(enum.Enum):
     print_org = 6
     print_dep = 7
 
-class defs(enum.Enum):
+class defs(enum.Enum): #employee info
 
     command = 1
     name = 2
