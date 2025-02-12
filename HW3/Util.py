@@ -3,7 +3,7 @@ import enum
 class Util:
 
     @staticmethod
-    def print_authors():
+    def print_authors() -> None:
         print("//////////////////////////////////////")
         print("/// id:  308542141                ////")
         print("/// name: Elad Natan              ////")

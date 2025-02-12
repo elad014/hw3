@@ -3,4 +3,4 @@ from OrganizationApp import OrganizationApp
 
 
 
-OrganizationApp().run()
+OrganizationApp().Run()

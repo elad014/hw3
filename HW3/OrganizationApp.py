@@ -1,16 +1,18 @@
 import sys
-from engine import Engine
-from Util import commands,worker_type,args,Util
+from Engine import Engine
+from Util import Util
+from Defs import commands,worker_type,args
+from typing import List
 
 class OrganizationApp:
 
     def __init__(self):
         self.engeine = Engine()
 
-    def run(self):
+    def Run(self):
         arg = 'welcome'
         arg = arg.split()
-        self.parser(arg)
+        self.Read_Command(arg)
 
         print('+++++++Testing:\n\n\n\n')
 
@@ -33,7 +35,7 @@ class OrganizationApp:
             print(x)
             arg = x
             arg = arg.split()
-            self.parser(arg)
+            self.Read_Command(arg)
 
         print('tree:\n')
         self.engeine.print_tree()
@@ -42,7 +44,7 @@ class OrganizationApp:
         print('print_dep:\n')
         arg = 'print_dep'
         arg = arg.split()
-        self.parser(arg)
+        self.Read_Command(arg)
 
         print("\n///////////////////////////////////////////\n")
 
@@ -58,7 +60,7 @@ class OrganizationApp:
             print(x)
             arg = x
             arg = arg.split()
-            self.parser(arg)
+            self.Read_Command(arg)
 
         print('tree:\n')
         self.engeine.print_tree()
@@ -78,7 +80,7 @@ class OrganizationApp:
             print(x)
             arg = x
             arg = arg.split()
-            self.parser(arg)
+            self.Read_Command(arg)
 
         print('tree:\n')
         self.engeine.print_tree()
@@ -96,7 +98,7 @@ class OrganizationApp:
             print(x)
             arg = x
             arg = arg.split()
-            self.parser(arg)
+            self.Read_Command(arg)
 
 
         print("End Testing ")
@@ -107,11 +109,13 @@ class OrganizationApp:
             arg = arg.split()
             self.parser(arg)
         """
-    def parser(self,args):
+
+
+#Reading
+    def Read_Command(self,args: List) -> None:
 
         if not self.validate_command_exist(args[0]):
-            return False
-
+            return
         elif args[0] == commands.welcome.name:
             return Util.print_authors()
 
@@ -122,23 +126,25 @@ class OrganizationApp:
             self.engeine.print_dep()
 
         elif args[0] == commands.add_employee.name:
-            return self.add_employee_parser(args)
+            return self.add_employee_parser(argoments = args)
 
         elif args[0] == commands.delete_employee.name:
-            return self.delete_employee_parser(args)
+            return self.delete_employee_parser(argoments = args)
 
         elif args[0] == commands.print_employee.name:
-            return self.print_employee_parser(args)
+            return self.print_employee_parser(argoments = args)
 
         elif args[0] == commands.assign_manager.name:
-            return self.assign_manager_parser(args)
-
+            return self.assign_manager_parser(argoments = args)
         elif args[0] == commands.quit.name:
             sys.exit(0)
         else:
-            tmp = {args.command.name: args[0]}
+            return
 
-    def add_employee_parser(self,argoments):
+
+##Parsing:
+
+    def add_employee_parser(self,argoments: List) -> None:
         worker_data = {}
 
         if len(argoments) < 5:
@@ -164,20 +170,39 @@ class OrganizationApp:
         worker_data[args.type.name]       = argoments[4]
 
 
-        if self.validate_add_employee_data(worker_data):
-            self.engeine.add_employee(worker_data)
+        if self.validate_add_employee_data(worker_data = worker_data):
+            self.engeine.add_employee(worker_data = worker_data)
 
         return
-
-    def delete_employee_parser(self,args):
-        if not args[1].isdigit():
+    def delete_employee_parser(self,argoments: List) -> None:
+        if not argoments[1].isdigit():
             Util.Logger(msg='employee id must be a number', type='e')
             return
-        if self.validate_delete_employee_data(int(args[1])):
-            self.engeine.delete_worker(int(args[1]))
+        if self.validate_delete_employee_data(id = int(argoments[1])):
+            self.engeine.delete_worker(id = int(argoments[1]))
+    def assign_manager_parser(self, argoments: List) -> None:
+        if not argoments[1].isdigit():
+            Util.Logger(msg='employee id must be a number', type='e')
+            return
 
-    def validate_delete_employee_data(self,id):
-        worker = self.engeine.find_worker(id)
+        if not argoments[2].isdigit():
+            Util.Logger(msg='manager id must be a number', type='e')
+            return
+        if self.validate_assign_manager_data(worker_id = int(argoments[1]), manager_id = int(argoments[2])):
+            self.engeine.asign_manager(worker_id = int(argoments[1]), manager_id = int(argoments[2]))
+    def print_employee_parser(self, argoments: List) -> None:
+        if not argoments[1].isdigit():
+            Util.Logger(msg='employee id must be a number', type='e')
+            return
+        if self.validate_print_employee_data(id = int(argoments[1])):
+            self.engeine.print_worker(id = int(argoments[1]))
+
+
+
+ ##Data Validation
+
+    def validate_delete_employee_data(self,id:int) -> bool:
+        worker = self.engeine.find_worker(id = id)
         if not worker:
             Util.Logger(msg ='Worker Not Found cannot remove this worker', type = 'e')
             return False
@@ -187,39 +212,20 @@ class OrganizationApp:
             return False
 
         return True
-    def print_employee_parser(self,args):
-        if not args[1].isdigit():
-            Util.Logger(msg='employee id must be a number', type='e')
-            return
-        if self.validate_print_employee_data(int(args[1])):
-            self.engeine.print_worker(int(args[1]))
-
-    def validate_print_employee_data(self,id):
-        worker = self.engeine.find_worker(id)
+    def validate_print_employee_data(self,id: int) -> bool:
+        worker = self.engeine.find_worker(id = id)
         if not worker:
             Util.Logger(msg ='Worker Not Found cannot print this worker', type = 'e')
             return False
 
         return True
-
-    def assign_manager_parser(self, args):
-        if not args[1].isdigit():
-            Util.Logger(msg='employee id must be a number', type='e')
-            return
-
-        if not args[2].isdigit():
-            Util.Logger(msg='manager id must be a number', type='e')
-            return
-        if self.validate_assign_manager_data(worker_id = int(args[1]), manager_id = int(args[2])):
-            self.engeine.asign_manager(worker_id = int(args[1]), manager_id = int(args[2]))
-
-    def validate_assign_manager_data(self, worker_id, manager_id):
-        worker = self.engeine.find_worker(worker_id)
+    def validate_assign_manager_data(self, worker_id: int, manager_id: int) -> bool:
+        worker = self.engeine.find_worker(id = worker_id)
         if not worker:
             Util.Logger(msg='Worker Not Found cannot remove this worker', type='e')
             return False
 
-        manager = self.engeine.find_worker(manager_id)
+        manager = self.engeine.find_worker(id = manager_id)
         if not manager:
             Util.Logger(msg='manager Not Found cannot remove this worker', type='e')
             return False
@@ -237,8 +243,7 @@ class OrganizationApp:
         return True
 
         return True
-
-    def validate_add_employee_data(self, worker_data):
+    def validate_add_employee_data(self, worker_data: dict) -> bool:
 
         if worker_data[args.type.name] not in worker_type.__members__:
             Util.Logger(msg ='Worker type must be from worker type list', type = 'e')
@@ -253,7 +258,7 @@ class OrganizationApp:
             return False
 
         if args.manager_id.name in worker_data:
-            manager = self.engeine.find_worker(worker_data[args.manager_id.name])
+            manager = self.engeine.find_worker(id = worker_data[args.manager_id.name])
             if not manager:
                 return False
 
@@ -262,8 +267,7 @@ class OrganizationApp:
                 return False
 
         return True
-
-    def validate_command_exist(self, comand):
+    def validate_command_exist(self, comand:str) -> bool:
             if comand not in commands.__members__:
                 Util.Logger(msg = f"{self.comand} is not in the command list",type ='e')
                 return False
