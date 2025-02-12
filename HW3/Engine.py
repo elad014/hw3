@@ -1,4 +1,4 @@
-from worker import worker
+from Worker import Worker
 from CEO import CEO
 from Util import Util
 from Defs import worker_type,args
@@ -25,8 +25,8 @@ class Engine:
             self._add_worker( worker_data = worker_data)
 
         Util.Logger(msg='Worker added Successfully', type='i')
-    def find_worker(self,id: int) -> worker:
-        worker = self._organization_tree[0].get_worker_by_id(id)
+    def find_worker(self,id: int) -> Worker:
+        worker = self._organization_tree[0].get_worker_by_id(id = id)
         if worker:
             return worker
 
@@ -79,7 +79,7 @@ class Engine:
     def _add_worker(self,worker_data: dict):
 
         manager = self.find_worker(id = worker_data[args.manager_id.name])
-        new_worker = worker(name=worker_data[args.name.name],
+        new_worker = Worker(name=worker_data[args.name.name],
                          department=worker_data[args.department.name],
                          age=worker_data[args.age.name],
                          type=worker_data[args.type.name],
@@ -88,7 +88,7 @@ class Engine:
         manager.asign_employee(new_worker)
         self._add_to_departments_tree(worker = new_worker)
         self._num_of_employees += 1
-    def _add_to_departments_tree(self,worker: worker):
+    def _add_to_departments_tree(self,worker: Worker):
         if worker.department in self._departments:
             self._departments[worker.department].append(worker)
         else:

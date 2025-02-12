@@ -10,98 +10,10 @@ class OrganizationApp:
         self.engeine = Engine()
 
     def Run(self):
-        arg = 'welcome'
-        arg = arg.split()
-        self.Read_Command(arg)
-
-        print('+++++++Testing:\n\n\n\n')
-
-        print('add_add_employee:')
-
-        a = ['add_employee ITZIK_manc nagarot_manc 10 CEO 1',
-            'add_employee ITZIK_manc nagarot 10 CEO',
-            'add_employee ITZIK_manc2 nagarot 10 CEO',
-            'add_employee ITZIK_FAIL nagarot 10 CTO 5',
-            'add_employee ITZIK2 nagarot_manc 10 CTO',
-            'add_employee ITZIK2 dev 10 CTO 1',
-            'add_employee ITZIK3 client 10 CTO 1',
-            'add_employee ITZIK4 dev 10 CTO 2',
-            'add_employee ITZIK5 client 10 CTO 3',
-            'add_employee ITZIK6 client 10 CTO 3',
-            'add_employee ITZIK7 dev 10 CTO 2',]
-
-        for x in a:
-            #arg = input("Please enter a command: ")
-            print(x)
-            arg = x
-            arg = arg.split()
-            self.Read_Command(arg)
-
-        print('tree:\n')
-        self.engeine.print_tree()
-
-        print("\n///////////////////////////////////////////\n")
-        print('print_dep:\n')
-        arg = 'print_dep'
-        arg = arg.split()
-        self.Read_Command(arg)
-
-        print("\n///////////////////////////////////////////\n")
-
-        print("assign_manager:\n")
-
-        d = ['assign_manager 101 102',
-             'assign_manager 2 101',
-             'assign_manager 101 2',
-             'assign_manager 6 2',
-             'assign_manager 5 1',]
-        for x in d:
-            # arg = input("Please enter a command: ")
-            print(x)
-            arg = x
-            arg = arg.split()
-            self.Read_Command(arg)
-
-        print('tree:\n')
-        self.engeine.print_tree()
-        print('tree:\n')
-        self.engeine.print_dep()
-
-        print("\n///////////////////////////////////////////\n")
-
-        print('delete_employee:\n')
-
-        d =['delete_employee 101',
-            'delete_employee 3',
-            'delete_employee 7',
-            'delete_employee 5',]
-        for x in d:
-            #arg = input("Please enter a command: ")
-            print(x)
-            arg = x
-            arg = arg.split()
-            self.Read_Command(arg)
-
-        print('tree:\n')
-        self.engeine.print_tree()
-        self.engeine.print_dep()
-
-        print("\n///////////////////////////////////////////\n")
-
-        print('print_employee:\n')
-        d =['print_employee 101',
-            'print_employee 1',
-            'print_employee 2',
-            'print_employee 6',]
-        for x in d:
-            #arg = input("Please enter a command: ")
-            print(x)
-            arg = x
-            arg = arg.split()
-            self.Read_Command(arg)
-
-
-        print("End Testing ")
+        """
+        run fung of the app handel main infinate loop
+        :return: None
+        """
         """
         print("Welcome to Compeny Worker Menegment")
         while True:
@@ -113,7 +25,11 @@ class OrganizationApp:
 
 #Reading
     def Read_Command(self,args: List) -> None:
-
+        """
+        Read commands from the main loop and classify the command to its specific parser.
+        :param args: list of argumant the first must be a command
+        :return: none
+        """
         if not self.validate_command_exist(args[0]):
             return
         elif args[0] == commands.welcome.name:
@@ -145,6 +61,13 @@ class OrganizationApp:
 ##Parsing:
 
     def add_employee_parser(self,argoments: List) -> None:
+        """
+        Get the list of arguments from the reader and order them in a dictionary.
+        Check for parsing issues (e.g., if the ID is not a number) and send the data for validation.
+        Then, run the engine to perform the correct action.
+        :param argoments: get list of arguments
+        :return: none
+        """
         worker_data = {}
 
         if len(argoments) < 5:
@@ -272,3 +195,106 @@ class OrganizationApp:
                 Util.Logger(msg = f"{self.comand} is not in the command list",type ='e')
                 return False
             return True
+
+
+
+
+####################################################################################################
+####################################################################################################
+####################################################################################################
+
+
+
+    def testing(self):
+        arg = 'welcome'
+        arg = arg.split()
+        self.Read_Command(arg)
+
+        print('+++++++Testing:\n\n\n\n')
+
+        print('add_add_employee:')
+
+        a = ['add_employee ITZIK_manc nagarot_manc 10 CEO 1',
+            'add_employee ITZIK_manc nagarot 10 CEO',
+            'add_employee ITZIK_manc2 nagarot 10 CEO',
+            'add_employee ITZIK_FAIL nagarot 10 CTO 5',
+            'add_employee ITZIK2 nagarot_manc 10 CTO',
+            'add_employee ITZIK2 dev 10 CTO 1',
+            'add_employee ITZIK3 client 10 CTO 1',
+            'add_employee ITZIK4 dev 10 CTO 2',
+            'add_employee ITZIK5 client 10 CTO 3',
+            'add_employee ITZIK6 client 10 CTO 3',
+            'add_employee ITZIK7 dev 10 CTO 2',]
+
+        for x in a:
+            #arg = input("Please enter a command: ")
+            print(x)
+            arg = x
+            arg = arg.split()
+            self.Read_Command(arg)
+
+        print('tree:\n')
+        self.engeine.print_tree()
+
+        print("\n///////////////////////////////////////////\n")
+        print('print_dep:\n')
+        arg = 'print_dep'
+        arg = arg.split()
+        self.Read_Command(arg)
+
+        print("\n///////////////////////////////////////////\n")
+
+        print("assign_manager:\n")
+
+        d = ['assign_manager 101 102',
+             'assign_manager 2 101',
+             'assign_manager 101 2',
+             'assign_manager 6 2',
+             'assign_manager 5 1',]
+        for x in d:
+            # arg = input("Please enter a command: ")
+            print(x)
+            arg = x
+            arg = arg.split()
+            self.Read_Command(arg)
+
+        print('tree:\n')
+        self.engeine.print_tree()
+        print('tree:\n')
+        self.engeine.print_dep()
+
+        print("\n///////////////////////////////////////////\n")
+
+        print('delete_employee:\n')
+
+        d =['delete_employee 101',
+            'delete_employee 3',
+            'delete_employee 7',
+            'delete_employee 5',]
+        for x in d:
+            #arg = input("Please enter a command: ")
+            print(x)
+            arg = x
+            arg = arg.split()
+            self.Read_Command(arg)
+
+        print('tree:\n')
+        self.engeine.print_tree()
+        self.engeine.print_dep()
+
+        print("\n///////////////////////////////////////////\n")
+
+        print('print_employee:\n')
+        d =['print_employee 101',
+            'print_employee 1',
+            'print_employee 2',
+            'print_employee 6',]
+        for x in d:
+            #arg = input("Please enter a command: ")
+            print(x)
+            arg = x
+            arg = arg.split()
+            self.Read_Command(arg)
+
+
+        print("End Testing ")

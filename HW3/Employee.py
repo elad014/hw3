@@ -30,7 +30,7 @@ class Employee:
         if id == self._id:
             return self
         for emp in self.employees:
-            worker = emp.get_worker_by_id(id)
+            worker = emp.get_worker_by_id(id = id)
             if worker:
                 return worker
         return
@@ -39,7 +39,7 @@ class Employee:
         print((" "* indent) + f"|---{self.type} | {self.department} | {self.name} - {self.age}")
         if self.employees:
             for emp in self.employees:
-                emp.print_worker_for_tree(indent + 2)
+                emp.print_worker_for_tree(indent = indent + 2)
         return
 
     @property

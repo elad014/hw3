@@ -1,7 +1,7 @@
 from Employee import Employee
 
 
-class worker(Employee):
+class Worker(Employee):
 
     def __init__(self,name: str, department: str, age: int ,type: str,manager_id: int):
 
