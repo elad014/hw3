@@ -1,6 +1,6 @@
-from HW3.worker import worker
+from worker import worker
 from CEO import CEO
-from Util import saved_commands,k_worker_type,defs
+from Util import worker_type,args,Util
 
 
 class Engine:
@@ -8,59 +8,73 @@ class Engine:
     def __init__(self):
         self.is_a_CEO = False
         self.Organization_tree= []
+        self.departments = {}
         self.num_of_employees = 0
 
     def add_employee(self,worker_data):
 
-        if worker_data[defs.type.name] != k_worker_type.CEO.name:
-            self.add_worker(worker_data)
-        elif not self.is_a_CEO:
-            self.add_CEO(worker_data)
-        else:
-            print("there is already CEO")
+        if worker_data[args.type.name] == worker_type.CEO.name and self.is_a_CEO:
+            Util.Logger(msg='CEO is exist cant add another one', type='e')
             return
+
+        if worker_data[args.type.name] == worker_type.CEO.name:
+            self.is_a_CEO = True
+            self.add_CEO(worker_data)
+
+        else:
+            self.add_worker(worker_data)
+
+        Util.Logger(msg='Worker added Successfully', type='i')
 
     def add_CEO(self,worker_data):
         self.is_a_CEO = True
-        self.Organization_tree.append(
-            CEO(name=worker_data[defs.name.name],
-                department=worker_data[defs.department.name],
-                age=worker_data[defs.age.name]))
 
-    def add_worker(self,worker_data,):
+        ceo = CEO(name=worker_data[args.name.name],
+                department=worker_data[args.department.name],
+                age=worker_data[args.age.name])
 
-        manager = self.find_worker(worker_data[defs.manager_id.name])
-        if manager:
-            _worker = worker(name=worker_data[defs.name.name],
-                      department=worker_data[defs.department.name],
-                      age=worker_data[defs.age.name],
-                      type=worker_data[defs.type.name],
-                      manager_id = worker_data[defs.manager_id.name])
+        self.Organization_tree.append(ceo)
+        self.add_to_departments_tree(ceo)
+        self.num_of_employees += 1
+    def add_director(self,director):
+        self.Organization_tree.append(director)
+        self.add_to_departments_tree(director)
 
-            manager.add_employee(_worker)
+    def add_worker(self,worker_data):
+
+        manager = self.find_worker(worker_data[args.manager_id.name])
+        _worker = worker(name=worker_data[args.name.name],
+                         department=worker_data[args.department.name],
+                         age=worker_data[args.age.name],
+                         type=worker_data[args.type.name],
+                         manager_id = worker_data[args.manager_id.name])
+
+        manager.add_employee(_worker)
+        self.add_to_departments_tree(_worker)
+        self.num_of_employees += 1
+
+    def add_to_departments_tree(self,worker):
+        if worker.department in self.departments:
+            self.departments[worker.department].append(worker)
         else:
-            print(f"{worker_data[defs.manager_id.name]} not found")
+            tmp = []
+            tmp.append(worker)
+            self.departments[worker.department] = tmp
 
     def find_worker(self,id):
-        worker = None
-        for root in self.Organization_tree:
-            worker = root.get_worker_by_id(id)
-            if not worker:
-                print(f'worker {id} not founde')
-        return worker
+        worker = self.Organization_tree[0].get_worker_by_id(id)
+        if worker:
+            return worker
 
-    def delete_worker(self,id,force = 0):
+    def delete_worker(self,id,assign = False):
         worker = self.find_worker(id)
-        if not worker:
-            return
+        manager = self.find_worker(worker.manager_id)
+        manager.employees.remove(worker)
 
-        if worker.employees and force == 0:
-            print("this worker is manager cant remove it")
-            return
-
-        worker_manager = self.find_worker(worker.manager_id)
-        worker_manager.employees.remove(worker)
-        print(f"worker {worker.name} removed sucssessfult")
+        if not assign:
+            self.num_of_employees -= 1
+            Util.Logger(msg=f"worker {worker.name} removed sucssessfult", type = "i")
+        self.departments[worker.department].remove(worker)
 
     def print_worker(self,id):
         worker = self.find_worker(id)
@@ -69,30 +83,23 @@ class Engine:
 
     def asign_manager(self, worker_id, manager_id):
         worker = self.find_worker(worker_id)
-        if not worker:
-            return
-
-
-        if worker.manager_id == manager_id:
-            print("this worker alredy belong to the manger")
-            return
-
         new_manager = self.find_worker(manager_id)
-        if not new_manager:
-            return
 
-        self.delete_worker(worker_id,force = 1)
+
+        self.delete_worker(worker_id,assign = True)
         worker.manager_id = manager_id
         worker.department = new_manager.department
         new_manager.add_employee(worker)
-        print(f'worker {worker_id} assined sucssessfully to manager {manager_id}')
+        self.departments[worker.department].append(worker)
+        Util.Logger(msg = f'worker {worker_id} assined sucssessfully to manager {manager_id}', type ="i")
 
     def print_tree(self):
             for root in self.Organization_tree:
-                root.print_manager(3)
+                root.print_worker()
 
     def print_dep(self):
-        for root in self.Organization_tree:
-            for w in root.employees:
-                print(f'|- {w.department}')
-                w.print_dep_manager()
+        Util.Logger(msg =f"Total Number of employees = {self.num_of_employees}")
+        for department, worker_list in self.departments.items():
+            Util.Logger(msg =(" " *2 ) + department + f" | number of employees = {len(worker_list)}")
+            for worker in worker_list:
+                Util.Logger(msg = (" " * 4) + f"|---{worker.type} | {worker.department} | {worker._id} | {worker.name} - {worker.age}")

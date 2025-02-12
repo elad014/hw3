@@ -1,5 +1,6 @@
+import sys
 from engine import Engine
-from Util import saved_commands,k_worker_type,defs,Util
+from Util import commands,worker_type,args,Util
 
 class OrganizationApp:
 
@@ -61,6 +62,8 @@ class OrganizationApp:
 
         print('tree:\n')
         self.engeine.print_tree()
+        print('tree:\n')
+        self.engeine.print_dep()
 
         print("\n///////////////////////////////////////////\n")
 
@@ -79,7 +82,7 @@ class OrganizationApp:
 
         print('tree:\n')
         self.engeine.print_tree()
-
+        self.engeine.print_dep()
 
         print("\n///////////////////////////////////////////\n")
 
@@ -96,120 +99,172 @@ class OrganizationApp:
             self.parser(arg)
 
 
-        print("Thank you for using FUN in the GROCERY STORE!")
-
-
+        print("End Testing ")
+        """
+        print("Welcome to Compeny Worker Menegment")
+        while True:
+            arg = input("Please enter a command: ")
+            arg = arg.split()
+            self.parser(arg)
+        """
     def parser(self,args):
 
         if not self.validate_command_exist(args[0]):
             return False
 
-        elif args[0] == saved_commands.welcome.name:
+        elif args[0] == commands.welcome.name:
             return Util.print_authors()
 
-        elif args[0] == saved_commands.print_org.name:
+        elif args[0] == commands.print_org.name:
             self.engeine.print_tree()
 
-        elif args[0] == saved_commands.print_dep.name:
+        elif args[0] == commands.print_dep.name:
             self.engeine.print_dep()
 
-        elif args[0] == saved_commands.add_employee.name:
+        elif args[0] == commands.add_employee.name:
             return self.add_employee_parser(args)
 
-        elif args[0] == saved_commands.delete_employee.name:
+        elif args[0] == commands.delete_employee.name:
             return self.delete_employee_parser(args)
 
-        elif args[0] == saved_commands.print_employee.name:
+        elif args[0] == commands.print_employee.name:
             return self.print_employee_parser(args)
 
-        elif args[0] == saved_commands.assign_manager.name:
+        elif args[0] == commands.assign_manager.name:
             return self.assign_manager_parser(args)
+
+        elif args[0] == commands.quit.name:
+            sys.exit(0)
         else:
-            tmp = {defs.command.name: args[0]}
+            tmp = {args.command.name: args[0]}
 
-    def add_employee_parser(self,args):
-        if len(args) < 5:
-            print("not enough argumants")
-            return
-
+    def add_employee_parser(self,argoments):
         worker_data = {}
 
-        worker_data[defs.command.name]    = args[0]
-        worker_data[defs.name.name]       = args[1]
-        worker_data[defs.department.name] = args[2]
-        worker_data[defs.type.name]       = args[4]
+        if len(argoments) < 5:
+            Util.Logger(msg ="not enough argoment for command add_add_employee", type ='e')
+            return
 
-        if args[3].isdigit():
-            worker_data[defs.age.name] = int(args[3])
+        if argoments[3].isdigit():
+            worker_data[args.age.name] = int(argoments[3])
         else:
-            print('[ERROR] age id must be a number')
+            Util.Logger(msg ='age must be a number' ,type ='e')
             return False
 
-        if len(args) == 6:
-            print(args[5])
-            if args[5].isdigit():
-                worker_data[defs.manager_id.name] = int(args[5])
+        if len(argoments) == 6:
+            if argoments[5].isdigit():
+                worker_data[args.manager_id.name] = int(argoments[5])
             else:
-                print('[ERROR] manager id must be a number')
+                Util.Logger(msg ='manager id must be a number',type ='e')
                 return False
-        if len(args) == 5 and worker_data[defs.type.name] !=  k_worker_type.CEO.name:
-            print("Error the only worker that can be without maneger is CEO")
-            return False
+
+        worker_data[args.command.name]    = argoments[0]
+        worker_data[args.name.name]       = argoments[1]
+        worker_data[args.department.name] = argoments[2]
+        worker_data[args.type.name]       = argoments[4]
+
 
         if self.validate_add_employee_data(worker_data):
             self.engeine.add_employee(worker_data)
-            self.engeine.num_of_employees += 1
 
         return
 
     def delete_employee_parser(self,args):
+        if not args[1].isdigit():
+            Util.Logger(msg='employee id must be a number', type='e')
+            return
+        if self.validate_delete_employee_data(int(args[1])):
+            self.engeine.delete_worker(int(args[1]))
 
-        if args[1].isdigit():
-           self.engeine.delete_worker(int(args[1]))
-           return
-        print('[ERROR] id must be a number')
-        return False
+    def validate_delete_employee_data(self,id):
+        worker = self.engeine.find_worker(id)
+        if not worker:
+            Util.Logger(msg ='Worker Not Found cannot remove this worker', type = 'e')
+            return False
 
+        if worker.employees:
+            Util.Logger(msg='this worker is manager cannot remove this worker', type='e')
+            return False
+
+        return True
     def print_employee_parser(self,args):
+        if not args[1].isdigit():
+            Util.Logger(msg='employee id must be a number', type='e')
+            return
+        if self.validate_print_employee_data(int(args[1])):
+            self.engeine.print_worker(int(args[1]))
 
-        if args[1].isdigit():
-           self.engeine.print_worker(int(args[1]))
-           return
-        print('[ERROR] id must be a number')
-        return False
+    def validate_print_employee_data(self,id):
+        worker = self.engeine.find_worker(id)
+        if not worker:
+            Util.Logger(msg ='Worker Not Found cannot print this worker', type = 'e')
+            return False
+
+        return True
 
     def assign_manager_parser(self, args):
-        print
-        if args[1].isdigit():
-           self.engeine.asign_manager(int(args[1]), int(args[2]))
-           return
-        print('[ERROR] id must be a number')
-        return False
+        if not args[1].isdigit():
+            Util.Logger(msg='employee id must be a number', type='e')
+            return
+
+        if not args[2].isdigit():
+            Util.Logger(msg='manager id must be a number', type='e')
+            return
+        if self.validate_assign_manager_data(worker_id = int(args[1]), manager_id = int(args[2])):
+            self.engeine.asign_manager(worker_id = int(args[1]), manager_id = int(args[2]))
+
+    def validate_assign_manager_data(self, worker_id, manager_id):
+        worker = self.engeine.find_worker(worker_id)
+        if not worker:
+            Util.Logger(msg='Worker Not Found cannot remove this worker', type='e')
+            return False
+
+        manager = self.engeine.find_worker(manager_id)
+        if not manager:
+            Util.Logger(msg='manager Not Found cannot remove this worker', type='e')
+            return False
+
+        if worker.manager_id == manager_id:
+            Util.Logger(msg="this worker alredy belong to the manger", type='e')
+            return False
+
+        return True
+
+        if worker.employees:
+            Util.Logger(msg='this worker is manager cannot remove this worker', type='e')
+            return False
+
+        return True
+
+        return True
 
     def validate_add_employee_data(self, worker_data):
 
-        if worker_data[defs.type.name] not in k_worker_type.__members__:
-            print('[ERROR] worker type must be from worker type list')
+        if worker_data[args.type.name] not in worker_type.__members__:
+            Util.Logger(msg ='Worker type must be from worker type list', type = 'e')
             return False
 
-        if worker_data[defs.type.name]  == k_worker_type.CEO.name and defs.manager_id.name in worker_data:
-            print('[ERROR] CEO can not get manager_id')
+        if worker_data[args.type.name]  == worker_type.CEO.name and args.manager_id.name in worker_data:
+            Util.Logger(msg ='CEO can not get manager_id', type = 'e')
             return False
 
-        if defs.manager_id.name in worker_data:
-            manager = self.engeine.find_worker(worker_data[defs.manager_id.name])
+        if worker_data[args.type.name] != worker_type.CEO.name and args.manager_id.name not in worker_data:
+            Util.Logger(msg = "The only worker that can be without maneger is CEO" , type = 'e')
+            return False
+
+        if args.manager_id.name in worker_data:
+            manager = self.engeine.find_worker(worker_data[args.manager_id.name])
             if not manager:
-                print('cant find manager')
                 return False
 
-            if manager.department != worker_data[defs.department.name] and worker_data[defs.manager_id.name] != 1:
-                print('You can not set this worker to this manager with other department')
+            if manager.department != worker_data[args.department.name] and worker_data[args.manager_id.name] != 1:
+                Util.Logger(msg ='You can not set this worker to this manager with other department', type = 'e')
                 return False
 
         return True
 
     def validate_command_exist(self, comand):
-            if comand not in saved_commands.__members__:
-                print(f"{self.comand} is not in the command list")
+            if comand not in commands.__members__:
+                Util.Logger(msg = f"{self.comand} is not in the command list",type ='e')
                 return False
             return True

@@ -14,7 +14,15 @@ class Util:
         print("/// mail: goldsteinofir@gmail.com ////")
         print("//////////////////////////////////////\n")
 
-class k_worker_type(enum.Enum):
+    @staticmethod
+    def Logger(msg: str, type: str = None):
+        if type == 'e':
+            print(f"[Error]: {msg}")
+        elif type == 'i':
+            print(f"[Info]: {msg}")
+        else:
+            print(msg)
+class worker_type(enum.Enum):
 
     SW_DEVELOPER = 1
     HW_DEVELOPER = 2
@@ -28,7 +36,7 @@ class k_worker_type(enum.Enum):
     CTO = 10
     CEO  = 11
 
-class saved_commands(enum.Enum):
+class commands(enum.Enum):
 
     welcome = 1
     add_employee = 2
@@ -37,8 +45,9 @@ class saved_commands(enum.Enum):
     assign_manager = 5
     print_org = 6
     print_dep = 7
+    quit = 8
 
-class defs(enum.Enum): #employee info
+class args(enum.Enum): #employee info
 
     command = 1
     name = 2
