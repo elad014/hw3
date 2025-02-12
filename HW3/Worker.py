@@ -8,6 +8,7 @@ class Worker(Employee):
         super().__init__(name = name, department = department, age = age)
         self._type = type
         self._manager_id = manager_id
+
     @property
     def type(self) -> None:
         return self._type

@@ -64,7 +64,7 @@ class OrganizationApp:
         """
         Get the list of arguments from the reader and order them in a dictionary.
         Check for parsing issues (e.g., if the ID is not a number) and send the data for validation.
-        Then, run the engine to perform the correct action.
+        Then, run the engine to perform the add_employee action.
         :param argoments: get list of arguments
         :return: none
         """
@@ -98,12 +98,26 @@ class OrganizationApp:
 
         return
     def delete_employee_parser(self,argoments: List) -> None:
+        """
+        Get the list of arguments from the reader and order them in a dictionary.
+        Check for parsing issues (e.g., if the ID is not a number) and send the data for validation.
+        Then, run the engine to perform the delete_employee action.
+        :param argoments: get list of arguments
+        :return: none
+        """
         if not argoments[1].isdigit():
             Util.Logger(msg='employee id must be a number', type='e')
             return
         if self.validate_delete_employee_data(id = int(argoments[1])):
             self.engeine.delete_worker(id = int(argoments[1]))
     def assign_manager_parser(self, argoments: List) -> None:
+        """
+        Get the list of arguments from the reader and order them in a dictionary.
+        Check for parsing issues (e.g., if the ID is not a number) and send the data for validation.
+        Then, run the engine to perform the assign_manager action.
+        :param argoments: get list of arguments
+        :return: none
+        """
         if not argoments[1].isdigit():
             Util.Logger(msg='employee id must be a number', type='e')
             return
@@ -114,6 +128,13 @@ class OrganizationApp:
         if self.validate_assign_manager_data(worker_id = int(argoments[1]), manager_id = int(argoments[2])):
             self.engeine.asign_manager(worker_id = int(argoments[1]), manager_id = int(argoments[2]))
     def print_employee_parser(self, argoments: List) -> None:
+        """
+        Get the list of arguments from the reader and order them in a dictionary.
+        Check for parsing issues (e.g., if the ID is not a number) and send the data for validation.
+        Then, run the engine to perform the print_employee action.
+        :param argoments: get list of arguments
+        :return: none
+        """
         if not argoments[1].isdigit():
             Util.Logger(msg='employee id must be a number', type='e')
             return
@@ -125,6 +146,11 @@ class OrganizationApp:
  ##Data Validation
 
     def validate_delete_employee_data(self,id:int) -> bool:
+        """
+        validate delete employee data tha ther is such a worker and if thos worker not a manager
+        :param id: int
+        :return: bool
+        """
         worker = self.engeine.find_worker(id = id)
         if not worker:
             Util.Logger(msg ='Worker Not Found cannot remove this worker', type = 'e')
@@ -136,6 +162,12 @@ class OrganizationApp:
 
         return True
     def validate_print_employee_data(self,id: int) -> bool:
+        """
+        Validate if the worker exists and can be printed.
+        Checks if the worker exists in the database, and logs an error if not found.
+        :param id: int - The worker's ID.
+        :return: bool - Returns True if worker exists, False otherwise.
+        """
         worker = self.engeine.find_worker(id = id)
         if not worker:
             Util.Logger(msg ='Worker Not Found cannot print this worker', type = 'e')
@@ -143,6 +175,14 @@ class OrganizationApp:
 
         return True
     def validate_assign_manager_data(self, worker_id: int, manager_id: int) -> bool:
+        """
+         Validate assigning a manager to a worker.
+         Ensures both the worker and manager exist, and that the worker is not already assigned to the given manager.
+         Also checks that the worker is not a manager themselves before assignment.
+         :param worker_id: int - The worker's ID.
+         :param manager_id: int - The manager's ID.
+         :return: bool - Returns True if assignment is valid, False otherwise.
+         """
         worker = self.engeine.find_worker(id = worker_id)
         if not worker:
             Util.Logger(msg='Worker Not Found cannot remove this worker', type='e')
@@ -167,7 +207,12 @@ class OrganizationApp:
 
         return True
     def validate_add_employee_data(self, worker_data: dict) -> bool:
-
+        """
+        Validate the data for adding a new employee.
+        Checks if the worker type is valid, and if the worker can be assigned a manager based on their type and department.
+        :param worker_data: dict - The worker's data, including type, manager_id, and department.
+        :return: bool - Returns True if the data is valid, False otherwise.
+        """
         if worker_data[args.type.name] not in worker_type.__members__:
             Util.Logger(msg ='Worker type must be from worker type list', type = 'e')
             return False
@@ -191,10 +236,16 @@ class OrganizationApp:
 
         return True
     def validate_command_exist(self, comand:str) -> bool:
-            if comand not in commands.__members__:
-                Util.Logger(msg = f"{self.comand} is not in the command list",type ='e')
-                return False
-            return True
+        """
+        Validate if the command exists in the list of predefined commands.
+        Checks if the provided command is available in the predefined command list.
+        :param command: str - The command to validate.
+        :return: bool - Returns True if the command exists, False otherwise.
+        """
+        if comand not in commands.__members__:
+            Util.Logger(msg = f"{self.comand} is not in the command list",type ='e')
+            return False
+        return True
 
 
 
