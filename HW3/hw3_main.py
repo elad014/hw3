@@ -2,5 +2,5 @@ from OrganizationApp import OrganizationApp
 
 
 
-OrganizationApp().testing()
-#OrganizationApp().Run()
+#OrganizationApp().testing()
+OrganizationApp().Run()

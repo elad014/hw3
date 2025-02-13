@@ -35,9 +35,10 @@ class Engine:
         :param id:
         :return: worker or none
         """
-        worker = self._organization_tree[0].get_worker_by_id(id = id)
-        if worker:
-            return worker
+        for worker in self._organization_tree:
+            worker = worker.get_worker_by_id(id = id)
+            if worker:
+                return worker
 
     def delete_worker(self,id: int ,assign: bool = False) -> None:
         """

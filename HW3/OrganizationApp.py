@@ -16,13 +16,11 @@ class OrganizationApp:
         run fung of the app handel main infinate loop
         :return: None
         """
-        """
-        print("Welcome to Compeny Worker Menegment")
+        Util.Logger(msg = "Welcome to Organization Tree App")
         while True:
             arg = input("Please enter a command: ")
             arg = arg.split()
-            self.parser(arg)
-        """
+            self.Read_Command(arg)
 
 
 #Reading
@@ -55,6 +53,7 @@ class OrganizationApp:
         elif args[0] == commands.assign_manager.name:
             return self.assign_manager_parser(argoments = args)
         elif args[0] == commands.quit.name:
+            Util.Logger(msg = "tank for using Organization Tree App.")
             sys.exit(0)
         else:
             return
@@ -72,7 +71,7 @@ class OrganizationApp:
         """
         worker_data = {}
 
-        if len(argoments) < 5:
+        if len(argoments) < 4:
             Util.Logger(msg ="not enough argoment for command add_add_employee", type ='e')
             return
 
@@ -82,7 +81,7 @@ class OrganizationApp:
             Util.Logger(msg ='age must be a number' ,type ='e')
             return False
 
-        if len(argoments) == 6:
+        if len(argoments) >= 6:
             if argoments[5].isdigit():
                 worker_data[args.manager_id.name] = int(argoments[5])
             else:
@@ -230,6 +229,7 @@ class OrganizationApp:
         if args.manager_id.name in worker_data:
             manager = self.engeine.find_worker(id = worker_data[args.manager_id.name])
             if not manager:
+                Util.Logger(msg="Cant find maneger for this worker try again", type='e')
                 return False
 
             if manager.department != worker_data[args.department.name] and worker_data[args.manager_id.name] != 1:
@@ -245,7 +245,7 @@ class OrganizationApp:
         :return: bool - Returns True if the command exists, False otherwise.
         """
         if comand not in commands.__members__:
-            Util.Logger(msg = f"{self.comand} is not in the command list",type ='e')
+            Util.Logger(msg = f"\'{comand}\' is not in the command list",type ='e')
             return False
         return True
 
