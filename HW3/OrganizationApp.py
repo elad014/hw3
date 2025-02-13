@@ -5,7 +5,9 @@ from Defs import commands,worker_type,args
 from typing import List
 
 class OrganizationApp:
-
+    """
+    Oraganization app is the main class that comunicate with user and read the user input
+    """
     def __init__(self):
         self.engeine = Engine()
 
@@ -347,5 +349,19 @@ class OrganizationApp:
             arg = arg.split()
             self.Read_Command(arg)
 
+        a = ['add_employee ITZIK8 dev 10 CTO 4',
+            'add_employee ITZIK9 dev 10 CTO 4'
+        ]
+
+        for x in a:
+            #arg = input("Please enter a command: ")
+            print(x)
+            arg = x
+            arg = arg.split()
+            self.Read_Command(arg)
+
+        self.engeine.print_tree()
+        print("\n\n")
+        self.engeine.print_dep()
 
         print("End Testing ")
