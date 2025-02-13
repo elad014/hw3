@@ -56,7 +56,10 @@ class Engine:
         if not assign:
             self._num_of_employees -= 1
             Util.Logger(msg=f"worker {worker.name} removed sucssessfult", type = "i")
+
         self._departments[worker.department].remove(worker)
+        if  len(self._departments[worker.department]) == 0:
+            del self._departments[worker.department]
     def print_tree(self) -> None:
         """
         call for the ceo and active recursive func that print rach employee

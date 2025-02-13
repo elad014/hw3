@@ -52,8 +52,9 @@ class OrganizationApp:
 
         elif args[0] == commands.assign_manager.name:
             return self.assign_manager_parser(argoments = args)
+
         elif args[0] == commands.quit.name:
-            Util.Logger(msg = "tank for using Organization Tree App.")
+            Util.Logger(msg = "Thank for using Organization Tree App.")
             sys.exit(0)
         else:
             return
@@ -322,6 +323,7 @@ class OrganizationApp:
 
         d =['delete_employee 101',
             'delete_employee 3',
+            'delete_employee 2',
             'delete_employee 7',
             'delete_employee 5',]
         for x in d:

@@ -19,6 +19,7 @@ Classes:
         Represents all employees except the CEO.
 
 Database Architecture:
+
     Organization Tree:
         The CEO sits at the top, with all employees below.
         Each worker maintains a list of subordinates.
